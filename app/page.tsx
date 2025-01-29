@@ -1,5 +1,5 @@
 "use client"
-import SnakeGame from './SnakeGame'
+import SnakeGame from './snake/SnakeGame'
 
 export default function Home() {
 
