@@ -19,12 +19,15 @@ type Props = {
 
 
 export default function SnakePart(props: Props) {
+  const colors = ['#DDD5D0', '#CFC0BD', '#B8B8AA', '#7F9183', '#586F6B' ]
   const [nextChildX, setNextChildX] = useState<number|null>(null)
   const [nextChildY, setNextChildY] = useState<number|null>(null)
   const [childX, setChildX] = useState<number>(0)
   const [childY, setChildY] = useState<number>(0)
   const [hasGrandChild, setHasGrandChild] = useState(false)
   const [positions, setPositions] = useState<Position[]>([])
+
+  const [myColor, setMyColor] = useState('white');
 
   const myX = SnakeSpringValue(props.x);  
   const myY = SnakeSpringValue(props.y);  
@@ -59,6 +62,8 @@ export default function SnakePart(props: Props) {
     }
   }, [props.appleEaten])
 
+  useEffect(()=>{if(!props.isHead)setMyColor(getRandomColor())},[])
+
 
   const checkCollision = () => {
     const list = positions.slice(1, -1);
@@ -71,6 +76,16 @@ export default function SnakePart(props: Props) {
         props.setAppleEaten(true);
       }
     }
+
+    // check out of bounds
+    const container = document.getElementById("snakegame");
+    if (!container || !container.parentElement) return;
+    if (props.x < 0 ||
+        props.y < 0 ||
+        props.x > container.clientWidth ||
+        props.y > container.clientHeight)  {
+      if (props.onCollision) props.onCollision(colidingPart);
+    }
   }
 
   const onPositionUpdate = (childPositions: Position[]) => {
@@ -81,6 +96,10 @@ export default function SnakePart(props: Props) {
     }
   }
 
+  const getRandomColor = () => {
+    return colors[Math.floor(Math.random()*colors.length)]
+  }
+
   return (
     <>
       <animated.div id="snakePart"
@@ -88,13 +107,13 @@ export default function SnakePart(props: Props) {
           position: 'absolute',
           width:props.size-2, 
           height:props.size-2, 
-          background: props.isHead?'white':'red', 
+          background: myColor, 
           zIndex: props.isHead?9:8,
           borderRadius: 8, 
           borderWidth: 1,
           borderColor: 'transparent',
           x: myX,
-          y: myY
+          y: myY,
         }}
         onClick={()=>{setHasGrandChild(true)}}
       />

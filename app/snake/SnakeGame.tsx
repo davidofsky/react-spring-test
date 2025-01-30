@@ -11,6 +11,7 @@ export type Position = {x:number, y:number};
 
 export default function SnakeGame() {
   const size = 50; // <- this is static
+
   const [snakeX, setSnakeX] = useState(0);
   const [snakeY, setSnakeY] = useState(0);
   const [applePosition, setApplePosition] = useState<Position>({x:0,y:0})
@@ -44,6 +45,7 @@ export default function SnakeGame() {
     if (e.key === 'ArrowDown'  && allowDirection(Direction.down))   direction.current = Direction.down;
     if (e.key === 'ArrowLeft'  && allowDirection(Direction.left))   direction.current = Direction.left;
     if (e.key === 'ArrowRight' && allowDirection(Direction.right))  direction.current = Direction.right;
+    if (e.key === ' ') setAppleEaten(true);
   };
 
   const allowDirection = (newDirection: Direction) => {
@@ -71,12 +73,10 @@ export default function SnakeGame() {
     },1000)
   }, []);
 
-
   return (
     <div id="snakegame" style={{
-      overflow: 'hidden',
       width: "100%", 
-      height: "100%"
+      height: "100%",
     }}>
       <Apple snakePartSize={size} applePosition={applePosition} setApplePosition={setApplePosition} appleEaten={appleEaten}/>
       <SnakePart x={snakeX} y={snakeY} size={size} hasChild={true} isHead={true} 

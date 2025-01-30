@@ -10,11 +10,10 @@ export default function Home() {
       alignItems: 'center',
       flexDirection: 'column',
     }}>
-      <h1 style={{fontSize: '2em'}} >SNAKE</h1>
       <div style={{
-        width: '50rem',
-        height: '50rem',
-        border: '2px dotted gray',
+        left:0, right: 0,
+        width: '100vw',
+        height: '100vh',
         borderRadius: 8,
       }}>
          <SnakeGame/>

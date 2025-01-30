@@ -17,17 +17,16 @@ export default function Apple(props: Props) {
 
   const setNewPosition = () => {
     const container = document.getElementById("snakegame");
-    if (!container) return;
+    if (!container || !container.parentElement) return;
 
-    const size = props.snakePartSize;
-    const width = container.clientWidth-size;
-    const height = container.clientHeight-size;
-    const positionsX = width/size;
-    const positionsY = height/size;
+    const size = props.snakePartSize
+    const width = container.parentElement.clientWidth-size;
+    const height = container.parentElement.clientHeight-size;
+    const positionsX = width/(size);
+    const positionsY = height/(size);
 
-
-    const x = Math.floor((width/positionsX)*(Math.floor(Math.random()*positionsX)))
-    const y = Math.floor((height/positionsY)*(Math.floor(Math.random()*positionsY)))
+    const x = (width/positionsX)*(Math.floor(Math.random()*positionsX))
+    const y = (height/positionsY)*(Math.floor(Math.random()*positionsY))
 
     props.setApplePosition({ x, y })
     myX.start(x)
@@ -40,7 +39,7 @@ export default function Apple(props: Props) {
   return (
     <animated.div style={{
       position: 'absolute',
-      background: 'red',
+      background: 'white',
       width: props.snakePartSize-2,
       height: props.snakePartSize-2,
       border: '2px solid transparent',
