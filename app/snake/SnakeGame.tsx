@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
+import { useDrag } from '@use-gesture/react'
 import SnakePart from './SnakePart'
 import Apple from './Apple'
 
@@ -9,9 +10,14 @@ enum Direction {
 
 export type Position = {x:number, y:number};
 
-export default function SnakeGame() {
+type Props = {
+  onRestart: () => any
+}
+
+export default function SnakeGame(props: Props) {
   const size = 50; // <- this is static
 
+  const [timer, setTimer] = useState<null|number>();
   const [snakeX, setSnakeX] = useState(0);
   const [snakeY, setSnakeY] = useState(0);
   const [applePosition, setApplePosition] = useState<Position>({x:0,y:0})
@@ -46,6 +52,7 @@ export default function SnakeGame() {
     if (e.key === 'ArrowLeft'  && allowDirection(Direction.left))   direction.current = Direction.left;
     if (e.key === 'ArrowRight' && allowDirection(Direction.right))  direction.current = Direction.right;
     if (e.key === ' ') setAppleEaten(true);
+    if (e.key === 'r') props.onRestart();
   };
 
   const allowDirection = (newDirection: Direction) => {
@@ -62,19 +69,25 @@ export default function SnakeGame() {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      document.onkeydown = handleKey; // Attach the keydown listener
-      const interval = setInterval(move, 100); // Start moving the box every second
-
-      return () => {
-        clearInterval(interval); // Cleanup interval on unmount
+    if (timer == null) {
+      setTimeout(() => {
         document.onkeydown = null; // Cleanup keydown listener
-      };
-    },1000)
-  }, []);
+        document.onkeydown = handleKey; // Attach the keydown listener
+        const interval = setInterval(move, 100); // Start moving the box every second
+        setTimer(parseInt(interval.toString()));
+      },1000)
+    }
+
+    return () => {
+      console.log(timer)
+      if (timer) clearInterval(timer); // Cleanup interval on unmount
+    };
+  }, [timer]);
+
+  const bind = useDrag(({offset: [x,y]}) => console.log(x,y))
 
   return (
-    <div id="snakegame" style={{
+    <div id="snakegame" {...bind()} style={{
       width: "100%", 
       height: "100%",
     }}>

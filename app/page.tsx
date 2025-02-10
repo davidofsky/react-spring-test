@@ -1,7 +1,16 @@
 "use client"
+import { useState, useEffect } from 'react' 
 import SnakeGame from './snake/SnakeGame'
 
 export default function Home() {
+
+  const [showGame, setShowGame] = useState(true);
+
+  useEffect(() => {setShowGame(true)}, [showGame])
+
+  const onRestart = () => {
+    setShowGame(false);
+  }
 
   return (
     <div style={{
@@ -16,7 +25,9 @@ export default function Home() {
         height: '100vh',
         borderRadius: 8,
       }}>
-         <SnakeGame/>
+        {showGame &&
+          <SnakeGame onRestart={onRestart}/>
+        }
       </div>
     </div>
   );

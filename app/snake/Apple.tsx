@@ -39,10 +39,10 @@ export default function Apple(props: Props) {
   return (
     <animated.div style={{
       position: 'absolute',
-      background: 'white',
+      background: 'transparent',
       width: props.snakePartSize-2,
       height: props.snakePartSize-2,
-      border: '2px solid transparent',
+      border: '2px solid white',
       borderRadius: 8,
       x: myX,
       y: myY
